@@ -11,6 +11,7 @@ function CheckjsonTree() {
             var Modal = document.createElement("div")
             Modal.id = "mainModal"
             Modal.className = "mainModal"
+            Modal.style = "position: fixed; z-index: 2147483647; left: 0px; top: 0px; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.4); display: none;"
             var ModalContent = document.createElement("div")
             ModalContent.className = "modal-content"
             var Close = document.createElement("span")
