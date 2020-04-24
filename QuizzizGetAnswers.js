@@ -130,12 +130,21 @@ if (found) {
 						r = s.structure.kind,
 						n = s.structure.answer,
 						c = Encoding.decode(n);
+						ModalContent.insertAdjacentHTML( 'beforeend', `<b>Question: </b>`)
 						ModalContent.insertAdjacentHTML( 'beforeend', `${s.structure.query.text}<br>`)
-						ModalContent.insertAdjacentHTML( 'beforeend', `<p>Answer</p> ${s.structure.options[c].text || s.structure.options[c].media[0].url} <br>`)
-					if (console.log(`Question ${e} - ${s.structure.query.text}`), console.log("Answer:"), "MCQ" === r) console.log(s.structure.options[c].text || s.structure.options[c].media[0].url);
-					else if ("MSQ" === r)
-						for (const t of c) console.log(s.structure.options[t].text || s.structure.options[t].media[0].url);
-					console.log("")
+						if (c[0] == "[") {
+							newc = c.slice(1, c.length-1)
+							newc = newc.split(",");
+							// c has been turned into an array :)
+							ModalContent.insertAdjacentHTML( 'beforeend', `<b>Answers:</b><br>`)
+							for (let i = 0; i < newc.length; i++) {
+								ModalContent.insertAdjacentHTML( 'beforeend', `${s.structure.options[i].text || s.structure.options[i].media[0].url} <br>`)
+							}
+							ModalContent.insertAdjacentHTML( 'beforeend', `<br>`)
+						} else {
+							//console.log(s.structure)
+						    ModalContent.insertAdjacentHTML( 'beforeend', `<b>Answer:</b> ${s.structure.options[c].text || s.structure.options[c].media[0].url} <br><br>`)
+						}
 				}
 			});
 		}
