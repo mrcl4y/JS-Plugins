@@ -108,13 +108,15 @@ if (found) {
 					return "function" == typeof e && (r = e()), "".concat(t, ".").concat(r, "|").concat(o, ".").concat(s)
 				}
 			}
+			var URL = window.location.href 
+			var GameType = URL.slice(URL.search("gameType=")+9, URL.length)
 			const prevConx = localStorage.getItem("previousContext"),
 				parsedConx = JSON.parse(prevConx),
 				encodedRoomHash = parsedConx.game.roomHash,
 				roomHash = Encoding.decode(encodedRoomHash.split("-")[1]),
 				data = {
 					roomHash: roomHash,
-					type: "solo"
+					type: GameType
 				};
 			fetch("https://game.quizizz.com/play-api/v3/getQuestions", {
 				method: "POST",
