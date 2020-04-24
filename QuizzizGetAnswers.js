@@ -138,7 +138,7 @@ if (found) {
 							// c has been turned into an array :)
 							ModalContent.insertAdjacentHTML( 'beforeend', `<b>Answers:</b><br>`)
 							for (let i = 0; i < newc.length; i++) {
-								ModalContent.insertAdjacentHTML( 'beforeend', `${s.structure.options[i].text || s.structure.options[i].media[0].url} <br>`)
+								ModalContent.insertAdjacentHTML( 'beforeend', `${s.structure.options[Number(newc[i])].text || s.structure.options[Number(newc[i])].media[0].url} <br>`)
 							}
 							ModalContent.insertAdjacentHTML( 'beforeend', `<br>`)
 						} else {
