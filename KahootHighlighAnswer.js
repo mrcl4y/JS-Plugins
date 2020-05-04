@@ -44,3 +44,4 @@ function CheckQuestion() {
     }, 10)
 }
 CheckQuestion()
+console.log("executed")
