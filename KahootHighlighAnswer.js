@@ -1,13 +1,16 @@
 if (document.location.href.search("kahoot.it/challenge") == -1) {
     throw new Error("You aren't on a kahoot challenge. If you think this is an error please DM East_Arctica#9238 on discord!")
 }
-
+if (!window.KahootAnswerHighlighterExecuted) {
+    throw new Error("Already ran kahoot highlighter!");
+}
+window.KahootAnswerHighlighterExecuted = true
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">
 correct-answer-x3Ca8B {
   color: lime !important;
 }
 </style>`);
-let ID = "b4adf7a3-d0a5-492f-98aa-d3873677fb59_1588627579908"
+let ID = document.location.href.slice(document.location.href.search("kahoot.it/challenge")+20, document.location.href.length)
 // Get the challenge data
 let xhttp = new XMLHttpRequest
 xhttp.open("GET", "https://kahoot.it/rest/challenges/" + ID + "?includeKahoot=true", false)
@@ -44,4 +47,3 @@ function CheckQuestion() {
     }, 10)
 }
 CheckQuestion()
-console.log("executed")
