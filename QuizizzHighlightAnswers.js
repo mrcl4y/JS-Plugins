@@ -138,20 +138,21 @@ function OnChanged(t, type) {
             n = s.structure.answer,
             c = Encoding.decode(n);
         let QuestionsGrid = document.getElementsByClassName("options-grid")[0]
-        let Time = new Date().getHours() + ":"   + new Date().getMinutes() + ":"  + new Date().getSeconds();
         switch(type) {
             case "Media":
-                if (s.structure.query.type == "text-image") {
+                if (s.structure.query.media[0]) {
                     var SRC = document.getElementsByClassName("question-media")[0].children[0].src
                     var CutUpSRC = SRC.slice(0, SRC.search("/?w=")-1)
                     if (s.structure.query.media[0].url == CutUpSRC) {
                         let CorrectAnswer = s.structure.options[c].text
-                        let Questions = document.getElementsByClassName("options-grid")[0].children
+                        let Questions = QuestionsGrid.children
                         // We will loop through the questions until we find one with a duplicate innerHTML as CorrectAnswer
-                        for (let i = 0; i < Questions.length-1; i++) { // Note: We add the -1 because of the emoji div that is added
-                            let ListedHTML = Questions[i].children[0].children[0].children[0].children[0]
-                            if (ListedHTML.innerHTML == s.structure.options[c].text) {
-                                ListedHTML.innerHTML = "<correct-answer-x3Ca8B><u>" + ListedHTML.innerHTML + "</u></correct-answer-x3Ca8B>"
+                        for (let i = 0; i < Questions.length; i++) { // Note: We add the -1 because of the emoji div that is added Edit: Don't do that add detection for emoji div below.
+                            if (!Questions[i].classList.contains("emoji")) {
+                                let ListedHTML = Questions[i].children[0].children[0].children[0].children[0]
+                                if (ListedHTML.innerHTML == CorrectAnswer) {
+                                    ListedHTML.innerHTML = "<correct-answer-x3Ca8B><u>" + ListedHTML.innerHTML + "</u></correct-answer-x3Ca8B>"
+                                }
                             }
                         }
                     }
@@ -160,18 +161,20 @@ function OnChanged(t, type) {
             case "Text":
                 if ((s.structure.query.text.replace(/&nbsp;/g, " ")).replace(/  /g, " ") == document.getElementsByClassName('resizeable question-text-color')[0].innerHTML) { // This is the current question
                     let CorrectAnswer = s.structure.options[c].text
-                    let Questions = document.getElementsByClassName("options-grid")[0].children
+                    let Questions = document.getElementsByClassName("options-grid")[0].childre
                     // We will loop through the questions until we find one with a duplicate innerHTML as CorrectAnswer
-                    for (let i = 0; i < Questions.length-1; i++) { // Note: We add the -1 because of the emoji div that is added
-                        let ListedHTML = Questions[i].children[0].children[0].children[0].children[0]
-                        if (ListedHTML.innerHTML == s.structure.options[c].text) {
-                            ListedHTML.innerHTML = "<correct-answer-x3Ca8B><u>" + ListedHTML.innerHTML + "</u></correct-answer-x3Ca8B>"
+                    for (let i = 0; i < Questions.length; i++) { // Note: We add the -1 because of the emoji div that is added Edit: Don't do that add detection for emoji div below.
+                        if (!Questions[i].classList.contains("emoji")) {
+                            let ListedHTML = Questions[i].children[0].children[0].children[0].children[0]
+                            if (ListedHTML.innerHTML == s.structure.options[c].text) {
+                                ListedHTML.innerHTML = "<correct-answer-x3Ca8B><u>" + ListedHTML.innerHTML + "</u></correct-answer-x3Ca8B>"
+                            }
                         }
                     }
                 }
                 break;
             case "Both":
-                if (s.structure.query.type == "text-image") {
+                if (s.structure.query.media[0]) {
                     let SRC = document.getElementsByClassName("question-media")[0].children[0].src
                     let CutUpSRC = SRC.slice(0, SRC.search("/?w=")-1)
                     if (s.structure.query.media[0].url == CutUpSRC) {
@@ -179,10 +182,13 @@ function OnChanged(t, type) {
                             let CorrectAnswer = s.structure.options[c].text
                             let Questions = document.getElementsByClassName("options-grid")[0].children
                             // We will loop through the questions until we find one with a duplicate innerHTML as CorrectAnswer
-                            for (let i = 0; i < Questions.length-1; i++) { // Note: We add the -1 because of the emoji div that is added
-                                let ListedHTML = Questions[i].children[0].children[0].children[0].children[0]
-                                if (ListedHTML.innerHTML == s.structure.options[c].text) {
-                                    ListedHTML.innerHTML = "<correct-answer-x3Ca8B><u>" + ListedHTML.innerHTML + "</u></correct-answer-x3Ca8B>"
+                            for (let i = 0; i < Questions.length; i++) { // Note: We add the -1 because of the emoji div that is added
+                                // Edit: Don't do that add detection for emoji div below.
+                                if (!Questions[i].classList.contains("emoji")) {
+                                    let ListedHTML = Questions[i].children[0].children[0].children[0].children[0]
+                                    if (ListedHTML.innerHTML == s.structure.options[c].text) {
+                                        ListedHTML.innerHTML = "<correct-answer-x3Ca8B><u>" + ListedHTML.innerHTML + "</u></correct-answer-x3Ca8B>"
+                                    }
                                 }
                             }
                         }
@@ -259,14 +265,20 @@ function QuestionChangedLoop(t) {
                     // Media was detected, check if text is too
                     if (document.getElementsByClassName("question-text")[0]) {
                         // Detected text aswell, send it to the onchanged
-                        OnChanged(t, "Both")
+                        setTimeout(function() {
+                            OnChanged(t, "Both")
+                        }, 650)
                     } else {
                         // Failed to detect text aswell, Media is all that we need to send
+                        setTimeout(function() {
                         OnChanged(t, "Media")
+                        }, 650)
                     }
                 } else {
                     // Media wasn't detected, no need to check if text was because it has to be
-                    OnChanged(t, "Text")
+                    setTimeout(function() {
+                        OnChanged(t, "Text")
+                    }, 650)
                 }
                 CurrentQuestionNum = NewNum.innerHTML
             }
