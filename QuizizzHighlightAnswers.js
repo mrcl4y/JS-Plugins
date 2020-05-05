@@ -112,7 +112,7 @@ let URL = window.location.href,
 // Wait until the page is loaded before running this
 function CheckLoaded() {
     setTimeout(function() {
-        if (document.getElementsByClassName("current-question")[0]) {
+        if (document.getElementsByClassName("current-question")[0] || document.getElementsByClassName("redemption-marker")[0]) {
             fetch("https://game.quizizz.com/play-api/v3/getQuestions", {
                 method: "POST",
                 headers: {
@@ -258,8 +258,9 @@ let CurrentQuestionNum = -1
 function QuestionChangedLoop(t) {
     setTimeout(function () {
         let NewNum = document.getElementsByClassName("current-question")[0]
+        let RedemptionQues = document.getElementsByClassName("redemption-marker")[0]
         if (NewNum) {
-            if (CurrentQuestionNum != NewNum.innerHTML) {
+            if (CurrentQuestionNum != NewNum.innerHTML ) {
                 // Run a check to see if its media, text, or both
                 if (document.getElementsByClassName("question-media")[0]) {
                     // Media was detected, check if text is too
@@ -281,6 +282,28 @@ function QuestionChangedLoop(t) {
                     }, 650)
                 }
                 CurrentQuestionNum = NewNum.innerHTML
+            }
+        }
+        if (RedemptionQues) {
+            // Run a check to see if its media, text, or both
+            if (document.getElementsByClassName("question-media")[0]) {
+                // Media was detected, check if text is too
+                if (document.getElementsByClassName("question-text")[0]) {
+                    // Detected text aswell, send it to the onchanged
+                    setTimeout(function() {
+                        OnChanged(t, "Both")
+                    }, 650)
+                } else {
+                    // Failed to detect text aswell, Media is all that we need to send
+                    setTimeout(function() {
+                        OnChanged(t, "Media")
+                    }, 650)
+                }
+            } else {
+                // Media wasn't detected, no need to check if text was because it has to be
+                setTimeout(function() {
+                    OnChanged(t, "Text")
+                }, 650)
             }
         }
         // This detection is really bad so I made a new version
