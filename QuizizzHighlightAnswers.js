@@ -161,7 +161,7 @@ function OnChanged(t, type) {
             case "Text":
                 if ((s.structure.query.text.replace(/&nbsp;/g, " ")).replace(/  /g, " ") == document.getElementsByClassName('resizeable question-text-color')[0].innerHTML) { // This is the current question
                     let CorrectAnswer = s.structure.options[c].text
-                    let Questions = document.getElementsByClassName("options-grid")[0].childre
+                    let Questions = document.getElementsByClassName("options-grid")[0].children
                     // We will loop through the questions until we find one with a duplicate innerHTML as CorrectAnswer
                     for (let i = 0; i < Questions.length; i++) { // Note: We add the -1 because of the emoji div that is added Edit: Don't do that add detection for emoji div below.
                         if (!Questions[i].classList.contains("emoji")) {
@@ -271,7 +271,7 @@ function QuestionChangedLoop(t) {
                     } else {
                         // Failed to detect text aswell, Media is all that we need to send
                         setTimeout(function() {
-                        OnChanged(t, "Media")
+                            OnChanged(t, "Media")
                         }, 650)
                     }
                 } else {
