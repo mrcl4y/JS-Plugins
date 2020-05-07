@@ -8,46 +8,53 @@ if (window.QuizizzBot && !window.QuizizzBotDebug) {
 }
 window.QuizizzBot = true
 
-let offset = 33;
-
+document.head.insertAdjacentHTML('beforeend', `<style type="text/css">
+correct-answer-x3Ca8B {
+  color: lime !important;
+}
+</style>`);
+function copyToClipboard(text) {
+    var dummy = document.createElement("textarea");
+    document.body.appendChild(dummy);
+    dummy.value = text;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
+}
 class Encoding {
-    static encode(t, e, o = 2) {
-        let s = this.encodeRaw(e, !0);
-        return `${s}${this.encodeRaw(t, !1, e)}${String.fromCharCode(33 + s.length)}${o}`
-    }
-
-    static encodeRaw(t, e, o = "quizizz.com") {
+    static encodeRaw(t, e, o="quizizz.com") {
         let s = 0;
         s = e ? o.charCodeAt(0) : o.charCodeAt(0) + o.charCodeAt(o.length - 1);
         let r = [];
         for (let o = 0; o < t.length; o++) {
-            let n = t[o].charCodeAt(0),
-                c = e ? this.safeAdd(n, s) : this.addOffset(n, s, o, 2);
+            let n = t[o].charCodeAt(0)
+                , c = e ? this.safeAdd(n, s) : this.addOffset(n, s, o, 2);
             r.push(String.fromCharCode(c))
         }
         return r.join("")
     }
 
-    static decode(t, e = !1) {
+    static decode(t, e=!1) {
         if (e) {
             let e = this.extractHeader(t);
             return this.decodeRaw(e, !0)
         }
         {
-            let e = this.decode(this.extractHeader(t), !0),
-                o = this.extractData(t);
+            let e = this.decode(this.extractHeader(t), !0)
+                , o = this.extractData(t);
             return this.decodeRaw(o, !1, e)
         }
     }
 
-    static decodeRaw(t, e, o = "quizizz.com") {
+    static decodeRaw(t, e, o="quizizz.com") {
         let s = this.extractVersion(t);
         let r = 0;
-        r = e ? o.charCodeAt(0) : o.charCodeAt(0) + o.charCodeAt(o.length - 1), r = -r;
+        r = e ? o.charCodeAt(0) : o.charCodeAt(0) + o.charCodeAt(o.length - 1),
+            r = -r;
         let n = [];
         for (let o = 0; o < t.length; o++) {
-            let c = t[o].charCodeAt(0),
-                a = e ? this.safeAdd(c, r) : this.addOffset(c, r, o, s);
+            let c = t[o].charCodeAt(0)
+                , a = e ? this.safeAdd(c, r) : this.addOffset(c, r, o, s);
             n.push(String.fromCharCode(a))
         }
         return n.join("")
@@ -70,7 +77,8 @@ class Encoding {
     static extractVersion(t) {
         if ("string" == typeof t && t[t.length - 1]) {
             let e = parseInt(t[t.length - 1], 10);
-            if (!isNaN(e)) return e
+            if (!isNaN(e))
+                return e
         }
         return null
     }
@@ -81,256 +89,182 @@ class Encoding {
     }
 
     static verifyCharCode(t) {
-        if ("number" == typeof t) return !(t >= 55296 && t <= 56319 || t >= 56320 && t <= 57343)
-    }
-
-    static generateIdentifier(t, e, o = 1, s = (new Date).getTime()) {
-        let r = e;
-        return "function" == typeof e && (r = e()), "".concat(t, ".").concat(r, "|").concat(o, ".").concat(s)
+        if ("number" == typeof t)
+            return !(t >= 55296 && t <= 56319 || t >= 56320 && t <= 57343)
     }
 }
-// add the CSS thats for correct questions
-document.head.insertAdjacentHTML('beforeend', `<style type="text/css">
-correct-answer-x3Ca8B {
-  color: lime !important;
-}
-</style>`);
 
-// Cut up the url to find the gameType
-let URL = window.location.href,
-    GameType = URL.slice(URL.search("gameType=") + 9, URL.length),
-    prevConx = localStorage.getItem("previousContext"),
-    parsedConx = JSON.parse(prevConx),
-    encodedRoomHash = parsedConx.game.roomHash,
-    roomHash = Encoding.decode(encodedRoomHash.split("-")[1]),
-    data = {
+function GetSetData() {
+    let URL = window.location.href
+        , GameType = URL.slice(URL.search("gameType=") + 9, URL.length)
+        , prevConx = localStorage.getItem("previousContext")
+        , parsedConx = JSON.parse(prevConx)
+        , encodedRoomHash = parsedConx.game.roomHash
+        , roomHash = Encoding.decode(encodedRoomHash.split("-")[1])
+        , data = {
         roomHash: roomHash,
         type: GameType
     };
 
-
-// Wait until the page is loaded before running this
-function CheckLoaded() {
-    setTimeout(function() {
-        if (document.getElementsByClassName("current-question")[0] || document.getElementsByClassName("redemption-marker")[0]) {
-            fetch("https://game.quizizz.com/play-api/v3/getQuestions", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            }).then(t => t.json()).then(t => {
-                QuestionChangedLoop(t)
-            })
-        } else {
-            CheckLoaded()
-        }
-    }, 10);
+    let xhttp = new XMLHttpRequest
+    xhttp.open("POST", "https://game.quizizz.com/play-api/v3/getQuestions", false)
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhttp.send(JSON.stringify(data))
+    return JSON.parse(xhttp.responseText)
 }
-CheckLoaded()
 
-function OnChanged(t, type) {
-    let e = 0;
-    for (let o of Object.keys(t.questions)) {
-        e++;
-        let s = t.questions[o],
-            r = s.structure.kind,
-            n = s.structure.answer,
-            c = Encoding.decode(n);
-        let QuestionsGrid = document.getElementsByClassName("options-grid")[0]
-        switch(type) {
-            case "Media":
-                if (s.structure.query.media[0]) {
-                    var SRC = document.getElementsByClassName("question-media")[0].children[0].src
-                    var CutUpSRC = SRC.slice(0, SRC.search("/?w=")-1)
-                    if (s.structure.query.media[0].url == CutUpSRC) {
-                        let CorrectAnswer = s.structure.options[c].text
-                        let Questions = QuestionsGrid.children
-                        // We will loop through the questions until we find one with a duplicate innerHTML as CorrectAnswer
-                        for (let i = 0; i < Questions.length; i++) { // Note: We add the -1 because of the emoji div that is added Edit: Don't do that add detection for emoji div below.
-                            if (!Questions[i].classList.contains("emoji")) {
-                                let ListedHTML = Questions[i].children[0].children[0].children[0].children[0]
-                                if (ListedHTML.innerHTML == CorrectAnswer) {
-                                    ListedHTML.innerHTML = "<correct-answer-x3Ca8B><u>" + ListedHTML.innerHTML + "</u></correct-answer-x3Ca8B>"
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-            case "Text":
-                if ((s.structure.query.text.replace(/&nbsp;/g, " ")).replace(/  /g, " ") == document.getElementsByClassName('resizeable question-text-color')[0].innerHTML) { // This is the current question
-                    let CorrectAnswer = s.structure.options[c].text
-                    let Questions = document.getElementsByClassName("options-grid")[0].children
-                    // We will loop through the questions until we find one with a duplicate innerHTML as CorrectAnswer
-                    for (let i = 0; i < Questions.length; i++) { // Note: We add the -1 because of the emoji div that is added Edit: Don't do that add detection for emoji div below.
-                        if (!Questions[i].classList.contains("emoji")) {
-                            let ListedHTML = Questions[i].children[0].children[0].children[0].children[0]
-                            if (ListedHTML.innerHTML == s.structure.options[c].text) {
-                                ListedHTML.innerHTML = "<correct-answer-x3Ca8B><u>" + ListedHTML.innerHTML + "</u></correct-answer-x3Ca8B>"
-                            }
-                        }
-                    }
-                }
-                break;
-            case "Both":
-                if (s.structure.query.media[0]) {
-                    let SRC = document.getElementsByClassName("question-media")[0].children[0].src
-                    let CutUpSRC = SRC.slice(0, SRC.search("/?w=")-1)
-                    if (s.structure.query.media[0].url == CutUpSRC) {
-                        if ((s.structure.query.text.replace(/&nbsp;/g, " ")).replace(/  /g, " ") == document.getElementsByClassName('resizeable question-text-color')[0].innerHTML) { // This is the current question
-                            let CorrectAnswer = s.structure.options[c].text
-                            let Questions = document.getElementsByClassName("options-grid")[0].children
-                            // We will loop through the questions until we find one with a duplicate innerHTML as CorrectAnswer
-                            for (let i = 0; i < Questions.length; i++) { // Note: We add the -1 because of the emoji div that is added
-                                // Edit: Don't do that add detection for emoji div below.
-                                if (!Questions[i].classList.contains("emoji")) {
-                                    let ListedHTML = Questions[i].children[0].children[0].children[0].children[0]
-                                    if (ListedHTML.innerHTML == s.structure.options[c].text) {
-                                        ListedHTML.innerHTML = "<correct-answer-x3Ca8B><u>" + ListedHTML.innerHTML + "</u></correct-answer-x3Ca8B>"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-        }
-        // Old code i don't want to use anymore, it used to handle correct answer detection
-        /*
-
-            console.log("c")
-            let Question = s.structure.query
-            let QuestionText = Question.text
-            if (c[0] == "[") { // Detect if the question is multiple choice
-                var IsMCQ = true
+function GetAnswer(Question) {
+    switch (Question.structure.kind) {
+        case "BLANK":
+            // Text Response, we have no need for image detection in answers
+            let ToRespond = []
+            for (let i = 0; i < Question.structure.options.length; i++) {
+                ToRespond.push(Question.structure.options[i].text)
             }
-
-            if (IsMCQ) {
-                console.log("d")
-                let newc = c.slice(1, c.length - 1)
-                newc = newc.split(",");
-                // c has been turned into an array :)
-                console.log(`<b>Answers:</b><br>`)
-                for (let i = 0; i < newc.length; i++) {
-                    console.log(s.structure.options[Number(newc[i])].text || s.structure.options[Number(newc[i])].media[0].url)
-                }
-            } else {
-                console.log("e")
-                if (s.structure.options[c].media[0]) {
-                    for (let i = 0; i < QuestionsGrid.children.length; i++) {
-                        if (!QuestionsGrid.children[i].classList.contains("emoji")) {
-                            var QText = QuestionsGrid.children[i].children[0].children[0].children[0].children[0]
-                            if (QuestionsGrid.children[i].children[0].children[0].innerHTML) {
-                                if (QText.innerHTML.search(s.structure.options[c].text) !== -1) {
-                                    console.log(QText.innerHTML)
-                                    QText.innerHTML = "<correct-answer-x3Ca8B><u><p>This one is correct, it used to be an image.</p></u></correct-answer-x3Ca8B>"
-                                    console.log(QText.innerHTML)
-                                }
-                            }
-                        }
-                    }
+            return ToRespond;
+        case "MSQ":
+            // Multiple Choice
+            let Answers = Encoding.decode(Question.structure.answer)
+            Answers = JSON.parse(Answers)
+            let TextArray = []
+            for (let i = 0; i < Answers.length; i++) {
+                if (Answers[i].text == "") {
+                    TextArray.push(Question.structure.options[Answers[i]].media[0].url)
                 } else {
-                    for (let i = 0; i < QuestionsGrid.children.length; i++) {
-                        if (!QuestionsGrid.children[i].classList.contains("emoji")) {
-                            var QText = QuestionsGrid.children[i].children[0].children[0].children[0].children[0]
-                            if (QuestionsGrid.children[i].children[0].children[0].innerHTML) {
-                                if (QText.innerHTML.search(s.structure.options[c].text) !== -1) {
-                                    console.log(QText.innerHTML)
-                                    QText.innerHTML = ("<correct-answer-x3Ca8B><u>") + QText.innerHTML + ("</u></correct-answer-x3Ca8B>")
-                                    console.log(QText.innerHTML)
-                                }
-                            }
-                        }
-                    }
+                    TextArray.push(Question.structure.options[Answers[i]].text)
                 }
             }
-        }
-
-        */
+            return TextArray;
+        case "MCQ":
+            // Single Choice
+            let AnswerNum = Encoding.decode(Question.structure.answer)
+            let Answer = Question.structure.options[AnswerNum].text
+            if (Answer == "") {
+                Answer = Question.structure.options[AnswerNum].media[0].url
+            }
+            return Answer;
     }
 }
 
+function GetQuestion(Set) {
+    for (let v of Object.keys(Set.questions)) {
+        v = Set.questions[v]
+        switch (GetQuestionType()) {
+            case "Both":
+                let BothSRC = document.getElementsByClassName("question-media")[0].children[0].src
+                BothSRC = BothSRC.slice(0, BothSRC.search("/?w=") - 1)
+                if (v.structure.query.media[0]) {
+                    if (v.structure.query.media[0].url == BothSRC) {
+                        let BothQuestion = document.getElementsByClassName("question-text")[0].children[0].children[0].innerHTML
+                        if (BothQuestion == v.structure.query.text) {
+                            return (v)
+                        }
+                    }
+                }
+                break
+            case "Media":
+                let CurrentSRC = document.getElementsByClassName("question-media")[0].children[0].src
+                CurrentSRC = CurrentSRC.slice(0, CurrentSRC.search("/?w=") - 1)
+                if (v.structure.query.media[0]) {
+                    if (v.structure.query.media[0].url == CurrentSRC) {
+                        return (v)
+                    }
+                }
+                break
+            case "Text":
+                let CurrentQuestion = document.getElementsByClassName("question-text")[0].children[0].children[0].innerHTML
+                if (CurrentQuestion == v.structure.query.text) {
+                    return (v)
+                }
+                break
+        }
+    }
+    return "Error: No question found"
+}
 
-// Loop a check to see if the question has changed
-let CurrentQuestionNum = -1
+function GetQuestionType() {
+    if (document.getElementsByClassName("question-media")[0]) {
+        // Media was detected, check if text is too
+        if (document.getElementsByClassName("question-text")[0]) {
+            // Detected text aswell, send it to the onchanged
+            return ("Both")
+        } else {
+            // Failed to detect text aswell, Media is all that we need to send
+            return ("Media")
+        }
+    } else {
+        // Media wasn't detected, no need to check if text was because it has to be
+        return ("Text")
+    }
+}
 
-function QuestionChangedLoop(t) {
-    setTimeout(function () {
+let CurrentQuestionNum = ""
+let LastRedemption
+
+function QuestionChangedLoop() {
+    setTimeout(function() {
         let NewNum = document.getElementsByClassName("current-question")[0]
         let RedemptionQues = document.getElementsByClassName("redemption-marker")[0]
         if (NewNum) {
-            if (CurrentQuestionNum != NewNum.innerHTML ) {
-                // Run a check to see if its media, text, or both
-                if (document.getElementsByClassName("question-media")[0]) {
-                    // Media was detected, check if text is too
-                    if (document.getElementsByClassName("question-text")[0]) {
-                        // Detected text aswell, send it to the onchanged
-                        setTimeout(function() {
-                            OnChanged(t, "Both")
-                        }, 650)
+            if (NewNum.innerHTML != CurrentQuestionNum) {
+                if (document.getElementsByClassName("typed-option-input")[0]) {
+                    let Answer = GetAnswer(GetQuestion(GetSetData()))
+                    if (Array.isArray(Answer)) {
+                        // We are on a question with multiple answers
+                        let ToShow = ""
+                        for (let x = 0; x < Answer.length; x++) {
+                            if (ToShow == "") {
+                                ToShow = Answer[x]
+                            } else {
+                                ToShow = ToShow + " | " + Answer[x]
+                            }
+                        }
+                        let ToShowNew = "Press Ctrl+C to copy (Answers are seperated by ' | ')"
+                        prompt(ToShowNew, ToShow)
                     } else {
-                        // Failed to detect text aswell, Media is all that we need to send
-                        setTimeout(function() {
-                            OnChanged(t, "Media")
-                        }, 650)
+                        let NewAnswer = "Press Ctrl+C to copy."
+                        prompt(NewAnswer, Answer);
                     }
                 } else {
-                    // Media wasn't detected, no need to check if text was because it has to be
-                    setTimeout(function() {
-                        OnChanged(t, "Text")
-                    }, 650)
+                    let Choices = document.getElementsByClassName("options-container")[0].children[0].children
+                    for (let i = 0; i < Choices.length; i++) {
+                        if (!Choices[i].classList.contains("emoji")) {
+                            let Choice = Choices[i].children[0].children[0].children[0].children[0]
+                            let Answer = GetAnswer(GetQuestion(GetSetData()))
+                            if (Array.isArray(Answer)) {
+                                // We are on a question with multiple answers
+                                for (let x = 0; x < Answer.length; x++) {
+                                    if (Choice.innerHTML == Answer[x]) {
+                                        Choice.innerHTML = "<correct-answer-x3Ca8B><u>" + Choice.innerHTML + "</u></correct-answer-x3Ca8B>"
+                                    }
+                                }
+                            } else {
+                                if (Choice.innerHTML == GetAnswer(GetQuestion(GetSetData()))) {
+                                    Choice.innerHTML = "<correct-answer-x3Ca8B><u>" + Choice.innerHTML + "</u></correct-answer-x3Ca8B>"
+                                } else if(Choice.style.backgroundImage.slice(5, Choice.style.backgroundImage.length-2).slice(0, Choice.style.backgroundImage.slice(5, Choice.style.backgroundImage.length-2).search("/?w=")-1) == GetAnswer(GetQuestion(GetSetData()))) {
+                                    Choice.parentElement.innerHTML = "<correct-answer-x3Ca8B><u>Correct Answer!</u></correct-answer-x3Ca8B>"
+                                }
+                            }
+                        }
+                    }
                 }
                 CurrentQuestionNum = NewNum.innerHTML
             }
-        }
-        if (RedemptionQues) {
-            // Run a check to see if its media, text, or both
-            if (document.getElementsByClassName("question-media")[0]) {
-                // Media was detected, check if text is too
-                if (document.getElementsByClassName("question-text")[0]) {
-                    // Detected text aswell, send it to the onchanged
-                    setTimeout(function() {
-                        OnChanged(t, "Both")
-                    }, 650)
-                } else {
-                    // Failed to detect text aswell, Media is all that we need to send
-                    setTimeout(function() {
-                        OnChanged(t, "Media")
-                    }, 650)
+        } else if (RedemptionQues) {
+            if (LastRedemption != GetQuestion(GetSetData())) {
+                let Choices = document.getElementsByClassName("options-container")[0].children[0].children
+                for (let i = 0; i < Choices.length; i++) {
+                    if (!Choices[i].classList.contains("emoji")) {
+                        let Choice = Choices[i].children[0].children[0].children[0].children[0]
+                        if (Choice.innerHTML == GetAnswer(GetQuestion(GetSetData()))) {
+                            Choice.innerHTML = "<correct-answer-x3Ca8B><u>" + Choice.innerHTML + "</u></correct-answer-x3Ca8B>"
+                        }
+                    }
                 }
-            } else {
-                // Media wasn't detected, no need to check if text was because it has to be
-                setTimeout(function() {
-                    OnChanged(t, "Text")
-                }, 650)
+                LastRedemption = GetQuestion(GetSetData())
             }
         }
-        // This detection is really bad so I made a new version
-        // Edit: The new version(getting game data) sucked too so I made another one(getting quiznumber text)
-        /*
-        if (document.getElementsByClassName('resizeable question-text-color')[0]) {
-            if (LastQuestion !== document.getElementsByClassName('resizeable question-text-color')[0].innerHTML) {
-                OnChanged(t, "Text")
-                LastQuestion = document.getElementsByClassName('resizeable question-text-color')[0].innerHTML
-            }
-        }
-        if (document.getElementsByClassName('question-media')[0]) {
-            if (LastQuestion !== document.getElementsByClassName('question-media')[0].children[0].src) {
-                OnChanged(t, "Image")
-                LastQuestion = document.getElementsByClassName('question-media')[0].children[0].src
-            }
-        }
-        */
-        QuestionChangedLoop(t)
+        QuestionChangedLoop()
     }, 10)
 }
-
-
-/*
-
-let QuestionsGrid = document.getElementsByClassName("options-grid")[0]
-var QText = QuestionsGrid.children[0].children[0].children[0].children[0].children[0]
-QText.innerHTML = QText.innerHTML.replace("<p>", "<u><correct-answer-x3Ca8B>")
-QText.innerHTML = QText.innerHTML.replace("</p>", "</correct-answer-x3Ca8B></u>")
-*/
+QuestionChangedLoop()
