@@ -115,6 +115,7 @@ function GetSetData() {
 }
 
 function GetAnswer(Question) {
+    console.log(Question.structure)
     switch (Question.structure.kind) {
         case "BLANK":
             // Text Response, we have no need for image detection in answers
@@ -266,6 +267,6 @@ function QuestionChangedLoop() {
             }
         }
         QuestionChangedLoop()
-    }, 10)
+    }, 100)
 }
 QuestionChangedLoop()
