@@ -13,14 +13,7 @@ correct-answer-x3Ca8B {
   color: lime !important;
 }
 </style>`);
-function copyToClipboard(text) {
-    var dummy = document.createElement("textarea");
-    document.body.appendChild(dummy);
-    dummy.value = text;
-    dummy.select();
-    document.execCommand("copy");
-    document.body.removeChild(dummy);
-}
+
 class Encoding {
     static encodeRaw(t, e, o="quizizz.com") {
         let s = 0;
@@ -115,7 +108,7 @@ function GetSetData() {
 }
 
 function GetAnswer(Question) {
-    console.log(Question.structure)
+    console.log(Question)
     switch (Question.structure.kind) {
         case "BLANK":
             // Text Response, we have no need for image detection in answers
