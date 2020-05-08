@@ -175,6 +175,9 @@ function GetQuestion(Set) {
                 break
         }
     }
+    console.log(Set)
+    console.log(GetQuestionType())
+    console.log(document.getElementsByClassName("question-text")[0].children[0].children[0].innerHTML)
     return "Error: No question found"
 }
 
