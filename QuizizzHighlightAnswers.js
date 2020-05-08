@@ -103,7 +103,6 @@ function GetSetData() {
     xhttp.open("POST", "https://game.quizizz.com/play-api/v3/getQuestions", false)
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send(JSON.stringify(data))
-    console.log(JSON.parse(xhttp.responseText))
     return JSON.parse(xhttp.responseText)
 }
 
