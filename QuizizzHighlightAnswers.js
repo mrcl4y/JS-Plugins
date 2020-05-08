@@ -108,7 +108,9 @@ function GetSetData() {
 }
 
 function GetAnswer(Question) {
+    console.log("Question below, check for structure!")
     console.log(Question)
+    console.log("Question Ended")
     switch (Question.structure.kind) {
         case "BLANK":
             // Text Response, we have no need for image detection in answers
