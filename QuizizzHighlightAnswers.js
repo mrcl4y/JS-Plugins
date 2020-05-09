@@ -107,9 +107,6 @@ function GetSetData() {
 }
 
 function GetAnswer(Question) {
-    console.log("Question below, check for structure!")
-    console.log(Question)
-    console.log("Question Ended")
     switch (Question.structure.kind) {
         case "BLANK":
             // Text Response, we have no need for image detection in answers
@@ -168,16 +165,15 @@ function GetQuestion(Set) {
                 }
                 break
             case "Text":
-                let CurrentQuestion = document.getElementsByClassName("question-text")[0].children[0].children[0].innerHTML
-                if (CurrentQuestion == v.structure.query.text) {
+                let ToSearchA = document.getElementsByClassName("question-text")[0].children[0].children[0].innerHTML
+                let ToSearchB = v.structure.query.text
+                ToSearchB = ToSearchB.replace('<br/>', '<br>')
+                if (ToSearchA == ToSearchB) {
                     return (v)
                 }
                 break
         }
     }
-    console.log(Set)
-    console.log(GetQuestionType())
-    console.log(document.getElementsByClassName("question-text")[0].children[0].children[0].innerHTML)
     return "Error: No question found"
 }
 
@@ -207,41 +203,53 @@ function QuestionChangedLoop() {
         if (NewNum) {
             if (NewNum.innerHTML != CurrentQuestionNum) {
                 if (document.getElementsByClassName("typed-option-input")[0]) {
-                    let Answer = GetAnswer(GetQuestion(GetSetData()))
-                    if (Array.isArray(Answer)) {
-                        // We are on a question with multiple answers
-                        let ToShow = ""
-                        for (let x = 0; x < Answer.length; x++) {
-                            if (ToShow == "") {
-                                ToShow = Answer[x]
-                            } else {
-                                ToShow = ToShow + " | " + Answer[x]
-                            }
-                        }
-                        let ToShowNew = "Press Ctrl+C to copy (Answers are seperated by ' | ')"
-                        prompt(ToShowNew, ToShow)
+                    let Set = GetSetData()
+                    let Question = GetQuestion(Set)
+                    if (Question == "Error: No question found") {
+                        alert("Failed to find question! This is a weird issue I don't understand, you will just have to answer this question legit for now.")
                     } else {
-                        let NewAnswer = "Press Ctrl+C to copy."
-                        prompt(NewAnswer, Answer);
+                        let Answer = GetAnswer(Question)
+                        if (Array.isArray(Answer)) {
+                            // We are on a question with multiple answers
+                            let ToShow = ""
+                            for (let x = 0; x < Answer.length; x++) {
+                                if (ToShow == "") {
+                                    ToShow = Answer[x]
+                                } else {
+                                    ToShow = ToShow + " | " + Answer[x]
+                                }
+                            }
+                            let ToShowNew = "Press Ctrl+C to copy (Answers are seperated by ' | ')"
+                            prompt(ToShowNew, ToShow)
+                        } else {
+                            let NewAnswer = "Press Ctrl+C to copy."
+                            prompt(NewAnswer, Answer);
+                        }
                     }
                 } else {
                     let Choices = document.getElementsByClassName("options-container")[0].children[0].children
                     for (let i = 0; i < Choices.length; i++) {
                         if (!Choices[i].classList.contains("emoji")) {
                             let Choice = Choices[i].children[0].children[0].children[0].children[0]
-                            let Answer = GetAnswer(GetQuestion(GetSetData()))
-                            if (Array.isArray(Answer)) {
-                                // We are on a question with multiple answers
-                                for (let x = 0; x < Answer.length; x++) {
-                                    if (Choice.innerHTML == Answer[x]) {
-                                        Choice.innerHTML = "<correct-answer-x3Ca8B><u>" + Choice.innerHTML + "</u></correct-answer-x3Ca8B>"
-                                    }
-                                }
+                            let Set = GetSetData()
+                            let Question = GetQuestion(Set)
+                            if (Question === "Error: No question found") {
+                                alert("Failed to find question! This is a weird issue I don't understand, you will just have to answer this question legit for now.")
                             } else {
-                                if (Choice.innerHTML == GetAnswer(GetQuestion(GetSetData()))) {
-                                    Choice.innerHTML = "<correct-answer-x3Ca8B><u>" + Choice.innerHTML + "</u></correct-answer-x3Ca8B>"
-                                } else if(Choice.style.backgroundImage.slice(5, Choice.style.backgroundImage.length-2).slice(0, Choice.style.backgroundImage.slice(5, Choice.style.backgroundImage.length-2).search("/?w=")-1) == GetAnswer(GetQuestion(GetSetData()))) {
-                                    Choice.parentElement.innerHTML = "<correct-answer-x3Ca8B><u>Correct Answer!</u></correct-answer-x3Ca8B>"
+                                let Answer = GetAnswer(Question)
+                                if (Array.isArray(Answer)) {
+                                    // We are on a question with multiple answers
+                                    for (let x = 0; x < Answer.length; x++) {
+                                        if (Choice.innerHTML == Answer[x]) {
+                                            Choice.innerHTML = "<correct-answer-x3Ca8B><u>" + Choice.innerHTML + "</u></correct-answer-x3Ca8B>"
+                                        }
+                                    }
+                                } else {
+                                    if (Choice.innerHTML == Answer) {
+                                        Choice.innerHTML = "<correct-answer-x3Ca8B><u>" + Choice.innerHTML + "</u></correct-answer-x3Ca8B>"
+                                    } else if (Choice.style.backgroundImage.slice(5, Choice.style.backgroundImage.length - 2).slice(0, Choice.style.backgroundImage.slice(5, Choice.style.backgroundImage.length - 2).search("/?w=") - 1) == GetAnswer(GetQuestion(GetSetData()))) {
+                                        Choice.parentElement.innerHTML = "<correct-answer-x3Ca8B><u>Correct Answer!</u></correct-answer-x3Ca8B>"
+                                    }
                                 }
                             }
                         }
