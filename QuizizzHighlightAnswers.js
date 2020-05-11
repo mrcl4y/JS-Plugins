@@ -4,7 +4,7 @@ if (window.location.href.search("quizizz.com/join/game/") == -1 && window.locati
 }
 // Next we want to detect if it has been run before and debug is disabled.
 if (window.QuizizzBot && !window.QuizizzBotDebug) {
-    throw new Error("Already ran Quizizz bot! Advanced: Set Window.QuizizzBotDebug to bypass this.");
+    throw new Error("Already ran Quizizz bot! Advanced: Set window.QuizizzBotDebug to bypass this.");
 }
 window.QuizizzBot = true
 
@@ -149,7 +149,7 @@ function GetQuestion(Set) {
                 if (v.structure.query.media[0]) {
                     if (v.structure.query.media[0].url == BothSRC) {
                         let BothQuestion = document.getElementsByClassName("question-text")[0].children[0].children[0].innerHTML
-                        if (BothQuestion == v.structure.query.text) {
+                        if (BothQuestion.replace(/&nbsp;/g, "") == v.structure.query.text.replace(/&nbsp;/g, "")) {
                             return (v)
                         }
                     }
@@ -240,15 +240,15 @@ function QuestionChangedLoop() {
                                 if (Array.isArray(Answer)) {
                                     // We are on a question with multiple answers
                                     for (let x = 0; x < Answer.length; x++) {
-                                        if (Choice.innerHTML == Answer[x]) {
+                                        if (Choice.innerHTML.replace(/&nbsp;/g, "") == Answer[x].replace(/&nbsp;/g, "")) {
                                             Choice.innerHTML = "<correct-answer-x3Ca8B><u>" + Choice.innerHTML + "</u></correct-answer-x3Ca8B>"
                                         }
                                     }
                                 } else {
-                                    if (Choice.innerHTML == Answer) {
+                                    if (Choice.innerHTML.replace(/&nbsp;/g, "") == Answer.replace(/&nbsp;/g, "")) {
                                         Choice.innerHTML = "<correct-answer-x3Ca8B><u>" + Choice.innerHTML + "</u></correct-answer-x3Ca8B>"
                                     } else if (Choice.style.backgroundImage.slice(5, Choice.style.backgroundImage.length - 2).slice(0, Choice.style.backgroundImage.slice(5, Choice.style.backgroundImage.length - 2).search("/?w=") - 1) == GetAnswer(GetQuestion(GetSetData()))) {
-                                        Choice.parentElement.innerHTML = "<correct-answer-x3Ca8B><u>Correct Answer!</u></correct-answer-x3Ca8B>"
+                                        Choice.innerHTML = "<correct-answer-x3Ca8B><u>Correct Answer</u></correct-answer-x3Ca8B>"
                                     }
                                 }
                             }
@@ -263,7 +263,7 @@ function QuestionChangedLoop() {
                 for (let i = 0; i < Choices.length; i++) {
                     if (!Choices[i].classList.contains("emoji")) {
                         let Choice = Choices[i].children[0].children[0].children[0].children[0]
-                        if (Choice.innerHTML == GetAnswer(GetQuestion(GetSetData()))) {
+                        if (Choice.innerHTML.replace(/&nbsp;/g, "") == GetAnswer(GetQuestion(GetSetData())).replace(/&nbsp;/g, "")) {
                             Choice.innerHTML = "<correct-answer-x3Ca8B><u>" + Choice.innerHTML + "</u></correct-answer-x3Ca8B>"
                         }
                     }
