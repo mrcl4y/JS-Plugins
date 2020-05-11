@@ -7,6 +7,13 @@ if (window.QuizizzBot && !window.QuizizzBotDebug) {
     throw new Error("Already ran Quizizz bot! Advanced: Set window.QuizizzBotDebug to bypass this.");
 }
 window.QuizizzBot = true
+let WaitTime = prompt("Please enter the number of seconds to wait before each answer.")
+if (Number(WaitTime) === NaN) {
+    alert("You did not enter a valid number. Reload and try again")
+    throw new Error("Invalid number");
+} else {
+    WaitTime = Number(WaitTime)*1000
+}
 
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">
 correct-answer-x3Ca8B {
@@ -196,7 +203,7 @@ function GetQuestionType() {
 let CurrentQuestionNum = ""
 let LastRedemption
 
-function QuestionChangedLoop() {
+async function QuestionChangedLoop() {
     setTimeout(function() {
         let NewNum = document.getElementsByClassName("current-question")[0]
         let RedemptionQues = document.getElementsByClassName("redemption-marker")[0]
@@ -241,14 +248,20 @@ function QuestionChangedLoop() {
                                     // We are on a question with multiple answers
                                     for (let x = 0; x < Answer.length; x++) {
                                         if (Choice.innerHTML.replace(/&nbsp;/g, "") == Answer[x].replace(/&nbsp;/g, "")) {
-                                            Choice.parentElement.click()
+                                            setTimeout(function() {
+                                                Choice.parentElement.click()
+                                            }, WaitTime)
                                         }
                                     }
                                 } else {
                                     if (Choice.innerHTML.replace(/&nbsp;/g, "") == Answer.replace(/&nbsp;/g, "")) {
-                                        Choice.parentElement.click()
+                                        setTimeout(function() {
+                                            Choice.parentElement.click()
+                                        }, WaitTime)
                                     } else if (Choice.style.backgroundImage.slice(5, Choice.style.backgroundImage.length - 2).slice(0, Choice.style.backgroundImage.slice(5, Choice.style.backgroundImage.length - 2).search("/?w=") - 1) == GetAnswer(GetQuestion(GetSetData()))) {
-                                        Choice.parentElement.click()
+                                        setTimeout(function() {
+                                            Choice.parentElement.click()
+                                        }, WaitTime)
                                     }
                                 }
                             }
@@ -264,7 +277,9 @@ function QuestionChangedLoop() {
                     if (!Choices[i].classList.contains("emoji")) {
                         let Choice = Choices[i].children[0].children[0].children[0].children[0]
                         if (Choice.innerHTML.replace(/&nbsp;/g, "") == GetAnswer(GetQuestion(GetSetData())).replace(/&nbsp;/g, "")) {
-                            Choice.parentElement.click()
+                            setTimeout(function() {
+                                Choice.parentElement.click()
+                            }, WaitTime)
                         }
                     }
                 }
