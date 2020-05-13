@@ -2,11 +2,6 @@
 if (window.location.href.search("quizizz.com/join/game/") == -1 && window.location.href.search("gameType=") == -1) {
     throw new Error("You aren't on a quizizz quiz. If you think this is an error please DM East_Arctica#9238 on discord!");
 }
-// Next we want to detect if it has been run before and debug is disabled.
-if (window.QuizizzBot && !window.QuizizzBotDebug) {
-    throw new Error("Already ran Quizizz bot! Advanced: Set window.QuizizzBotDebug to bypass this.");
-}
-window.QuizizzBot = true
 
 let script = document.createElement('script');
 script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
@@ -20,7 +15,7 @@ correct-answer-x3Ca8B {
 </style>`);
 
 class Encoding {
-    static encodeRaw(t, e, o="quizizz.com") {
+    static encodeRaw(t, e, o = "quizizz.com") {
         let s = 0;
         s = e ? o.charCodeAt(0) : o.charCodeAt(0) + o.charCodeAt(o.length - 1);
         let r = [];
@@ -32,7 +27,7 @@ class Encoding {
         return r.join("")
     }
 
-    static decode(t, e=!1) {
+    static decode(t, e = !1) {
         if (e) {
             let e = this.extractHeader(t);
             return this.decodeRaw(e, !0)
@@ -44,7 +39,7 @@ class Encoding {
         }
     }
 
-    static decodeRaw(t, e, o="quizizz.com") {
+    static decodeRaw(t, e, o = "quizizz.com") {
         let s = this.extractVersion(t);
         let r = 0;
         r = e ? o.charCodeAt(0) : o.charCodeAt(0) + o.charCodeAt(o.length - 1),
@@ -203,9 +198,15 @@ let CurrentQuestionNum = ""
 let LastRedemption
 
 function Fix(s) {
+    sEnd = s.lastIndexOf("&nbsp;")
+    if (sEnd == s.length - 6) {
+        s = s.substring(0, sEnd)
+    }
     s = s.replace(/&nbsp;/g, " ")
     s = s.replace(/&#8203;/g, "‍")
-    return jQuery('<div>').html(String(s))[0].innerHTML
+    s = jQuery('<div>').html(String(s))[0].innerHTML
+    s = s.replace(/\s+/g, ' ')
+    return s
 }
 
 function QuestionChangedLoop() {
@@ -253,12 +254,12 @@ function QuestionChangedLoop() {
                                     if (Array.isArray(Answer)) {
                                         // We are on a question with multiple answers
                                         for (let x = 0; x < Answer.length; x++) {
-                                            if (Fix(Choice.innerHTML) == Fix(Answer[x])) {
+                                            if (Fix(Choice.innerHTML) == Answer[x]) {
                                                 Choice.innerHTML = "<correct-answer-x3Ca8B><u>" + Choice.innerHTML + "</u></correct-answer-x3Ca8B>"
                                             }
                                         }
                                     } else {
-                                        if (Fix(Choice.innerHTML) == Fix(Answer)) {
+                                        if (Fix(Choice.innerHTML) == Answer) {
                                             Choice.innerHTML = "<correct-answer-x3Ca8B><u>" + Choice.innerHTML + "</u></correct-answer-x3Ca8B>"
                                         } else if (Choice.style.backgroundImage.slice(5, Choice.style.backgroundImage.length - 2).slice(0, Choice.style.backgroundImage.slice(5, Choice.style.backgroundImage.length - 2).search("/?w=") - 1) == GetAnswer(GetQuestion(GetSetData()))) {
                                             Choice.innerHTML = "<correct-answer-x3Ca8B><u>Correct Answer</u></correct-answer-x3Ca8B>"
@@ -277,7 +278,7 @@ function QuestionChangedLoop() {
                 for (let i = 0; i < Choices.length; i++) {
                     if (!Choices[i].classList.contains("emoji")) {
                         let Choice = Choices[i].children[0].children[0].children[0].children[0]
-                        if (Fix(Choice.innerHTML) == Fix(GetAnswer(GetQuestion(GetSetData())))) {
+                        if (Fix(Choice.innerHTML) == GetAnswer(GetQuestion(GetSetData()))) {
                             Choice.innerHTML = "<correct-answer-x3Ca8B><u>" + Choice.innerHTML + "</u></correct-answer-x3Ca8B>"
                         }
                     }

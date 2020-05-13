@@ -2,11 +2,11 @@
 if (window.location.href.search("quizizz.com/join/game/") == -1 && window.location.href.search("gameType=") == -1) {
     throw new Error("You aren't on a quizizz quiz. If you think this is an error please DM East_Arctica#9238 on discord!");
 }
-// Next we want to detect if it has been run before and debug is disabled.
-if (window.QuizizzBot && !window.QuizizzBotDebug) {
-    throw new Error("Already ran Quizizz bot! Advanced: Set window.QuizizzBotDebug to bypass this.");
-}
-window.QuizizzBot = true
+
+let script = document.createElement('script');
+script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
+script.type = 'text/javascript';
+document.getElementsByTagName('head')[0].appendChild(script);
 
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">
 correct-answer-x3Ca8B {
@@ -15,7 +15,7 @@ correct-answer-x3Ca8B {
 </style>`);
 
 class Encoding {
-    static encodeRaw(t, e, o="quizizz.com") {
+    static encodeRaw(t, e, o = "quizizz.com") {
         let s = 0;
         s = e ? o.charCodeAt(0) : o.charCodeAt(0) + o.charCodeAt(o.length - 1);
         let r = [];
@@ -27,7 +27,7 @@ class Encoding {
         return r.join("")
     }
 
-    static decode(t, e=!1) {
+    static decode(t, e = !1) {
         if (e) {
             let e = this.extractHeader(t);
             return this.decodeRaw(e, !0)
@@ -39,7 +39,7 @@ class Encoding {
         }
     }
 
-    static decodeRaw(t, e, o="quizizz.com") {
+    static decodeRaw(t, e, o = "quizizz.com") {
         let s = this.extractVersion(t);
         let r = 0;
         r = e ? o.charCodeAt(0) : o.charCodeAt(0) + o.charCodeAt(o.length - 1),
@@ -149,7 +149,7 @@ function GetQuestion(Set) {
                 if (v.structure.query.media[0]) {
                     if (v.structure.query.media[0].url == BothSRC) {
                         let BothQuestion = document.getElementsByClassName("question-text")[0].children[0].children[0].innerHTML
-                        if (BothQuestion.replace(/&nbsp;/g, "") == v.structure.query.text.replace(/&nbsp;/g, "")) {
+                        if (Fix(BothQuestion) == Fix(v.structure.query.text)) {
                             return (v)
                         }
                     }
@@ -167,8 +167,9 @@ function GetQuestion(Set) {
             case "Text":
                 let ToSearchA = document.getElementsByClassName("question-text")[0].children[0].children[0].innerHTML
                 let ToSearchB = v.structure.query.text
-                ToSearchB = ToSearchB.replace('<br/>', '<br>')
-                if (ToSearchA == ToSearchB) {
+                ToSearchB = ToSearchB
+                ToSearchA = ToSearchA
+                if (Fix(ToSearchA) == Fix(ToSearchB)) {
                     return (v)
                 }
                 break
@@ -196,65 +197,79 @@ function GetQuestionType() {
 let CurrentQuestionNum = ""
 let LastRedemption
 
+function Fix(s) {
+    sEnd = s.lastIndexOf("&nbsp;")
+    if (sEnd == s.length - 6) {
+        s = s.substring(0, sEnd)
+    }
+    s = s.replace(/&nbsp;/g, " ")
+    s = s.replace(/&#8203;/g, "‍")
+    s = jQuery('<div>').html(String(s))[0].innerHTML
+    s = s.replace(/\s+/g, ' ')
+    return s
+}
+
 function QuestionChangedLoop() {
     setTimeout(function() {
         let NewNum = document.getElementsByClassName("current-question")[0]
         let RedemptionQues = document.getElementsByClassName("redemption-marker")[0]
         if (NewNum) {
             if (NewNum.innerHTML != CurrentQuestionNum) {
-                if (document.getElementsByClassName("typed-option-input")[0]) {
-                    let Set = GetSetData()
-                    let Question = GetQuestion(Set)
-                    if (Question == "Error: No question found") {
-                        alert("Failed to find question! This is a weird issue I don't understand, you will just have to answer this question legit for now.")
-                    } else {
-                        let Answer = GetAnswer(Question)
-                        if (Array.isArray(Answer)) {
-                            // We are on a question with multiple answers
-                            let ToShow = ""
-                            for (let x = 0; x < Answer.length; x++) {
-                                if (ToShow == "") {
-                                    ToShow = Answer[x]
-                                } else {
-                                    ToShow = ToShow + " | " + Answer[x]
-                                }
-                            }
-                            let ToShowNew = "Press Ctrl+C to copy (Answers are seperated by ' | ')"
-                            prompt(ToShowNew, ToShow)
+                setTimeout(function() {
+                    if (document.getElementsByClassName("typed-option-input")[0]) {
+                        let Set = GetSetData()
+                        let Question = GetQuestion(Set)
+                        if (Question == "Error: No question found") {
+                            alert("An error occurred, This should never happen. Please DM East_Arctica#9238 with your quiz link.")
                         } else {
-                            let NewAnswer = "Press Ctrl+C to copy."
-                            prompt(NewAnswer, Answer);
-                        }
-                    }
-                } else {
-                    let Choices = document.getElementsByClassName("options-container")[0].children[0].children
-                    for (let i = 0; i < Choices.length; i++) {
-                        if (!Choices[i].classList.contains("emoji")) {
-                            let Choice = Choices[i].children[0].children[0].children[0].children[0]
-                            let Set = GetSetData()
-                            let Question = GetQuestion(Set)
-                            if (Question === "Error: No question found") {
-                                alert("Failed to find question! This is a weird issue I don't understand, you will just have to answer this question legit for now.")
+                            let Answer = GetAnswer(Question)
+                            if (Array.isArray(Answer)) {
+                                // We are on a question with multiple answers
+                                let ToShow = ""
+                                for (let x = 0; x < Answer.length; x++) {
+                                    if (ToShow == "") {
+                                        ToShow = Answer[x]
+                                    } else {
+                                        ToShow = ToShow + " | " + Answer[x]
+                                    }
+                                }
+                                let ToShowNew = "Press Ctrl+C to copy (Answers are seperated by ' | ')"
+                                prompt(ToShowNew, ToShow)
                             } else {
-                                let Answer = GetAnswer(Question)
-                                if (Array.isArray(Answer)) {
-                                    // We are on a question with multiple answers
-                                    for (let x = 0; x < Answer.length; x++) {
-                                        if (Choice.innerHTML.replace(/&nbsp;/g, "") == Answer[x].replace(/&nbsp;/g, "")) {
+                                let NewAnswer = "Press Ctrl+C to copy."
+                                prompt(NewAnswer, Answer);
+                            }
+                        }
+                    } else {
+                        let Choices = document.getElementsByClassName("options-container")[0].children[0].children
+                        for (let i = 0; i < Choices.length; i++) {
+                            if (!Choices[i].classList.contains("emoji")) {
+                                let Choice = Choices[i].children[0].children[0].children[0].children[0]
+                                let Set = GetSetData()
+                                let Question = GetQuestion(Set)
+                                if (Question === "Error: No question found") {
+                                    alert("Failed to find question! This is a weird issue I don't understand, you will just have to answer this question legit for now.")
+                                } else {
+                                    let Answer = GetAnswer(Question)
+                                    if (Array.isArray(Answer)) {
+                                        // We are on a question with multiple answers
+                                        for (let x = 0; x < Answer.length; x++) {
+                                            if (Fix(Choice.innerHTML) == Answer[x]) {
+                                                Choice.innerHTML = "<correct-answer-x3Ca8B><u>" + Choice.innerHTML + "</u></correct-answer-x3Ca8B>"
+                                            }
+                                        }
+                                    } else {
+                                        if (Fix(Choice.innerHTML) == Answer) {
                                             Choice.innerHTML = "<correct-answer-x3Ca8B><u>" + Choice.innerHTML + "</u></correct-answer-x3Ca8B>"
+                                        } else if (Choice.style.backgroundImage.slice(5, Choice.style.backgroundImage.length - 2).slice(0, Choice.style.backgroundImage.slice(5, Choice.style.backgroundImage.length - 2).search("/?w=") - 1) == GetAnswer(GetQuestion(GetSetData()))) {
+                                            Choice.innerHTML = "<correct-answer-x3Ca8B><u>Correct Answer</u></correct-answer-x3Ca8B>"
                                         }
                                     }
-                                } else {
-                                    if (Choice.innerHTML.replace(/&nbsp;/g, "") == Answer.replace(/&nbsp;/g, "")) {
-                                        Choice.innerHTML = "<correct-answer-x3Ca8B><u>" + Choice.innerHTML + "</u></correct-answer-x3Ca8B>"
-                                    } else if (Choice.style.backgroundImage.slice(5, Choice.style.backgroundImage.length - 2).slice(0, Choice.style.backgroundImage.slice(5, Choice.style.backgroundImage.length - 2).search("/?w=") - 1) == GetAnswer(GetQuestion(GetSetData()))) {
-                                        Choice.innerHTML = "<correct-answer-x3Ca8B><u>Correct Answer</u></correct-answer-x3Ca8B>"
-                                    }
                                 }
                             }
                         }
                     }
-                }
+                }, 1000)
                 CurrentQuestionNum = NewNum.innerHTML
             }
         } else if (RedemptionQues) {
@@ -263,7 +278,7 @@ function QuestionChangedLoop() {
                 for (let i = 0; i < Choices.length; i++) {
                     if (!Choices[i].classList.contains("emoji")) {
                         let Choice = Choices[i].children[0].children[0].children[0].children[0]
-                        if (Choice.innerHTML.replace(/&nbsp;/g, "") == GetAnswer(GetQuestion(GetSetData())).replace(/&nbsp;/g, "")) {
+                        if (Fix(Choice.innerHTML) == GetAnswer(GetQuestion(GetSetData()))) {
                             Choice.innerHTML = "<correct-answer-x3Ca8B><u>" + Choice.innerHTML + "</u></correct-answer-x3Ca8B>"
                         }
                     }
@@ -274,4 +289,9 @@ function QuestionChangedLoop() {
         QuestionChangedLoop()
     }, 100)
 }
-QuestionChangedLoop()
+function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)) }
+async function wait() {
+    await sleep(1000);
+    QuestionChangedLoop();
+}
+wait()
