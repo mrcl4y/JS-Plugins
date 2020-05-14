@@ -1,4 +1,5 @@
 {
-  "Quizizz Auto Answer": "https://raw.githubusercontent.com/EastArctica/JS-Plugins/master/QuizizzAutoAnswer.js",
-  "Quizizz Answer Highlighter": "https://raw.githubusercontent.com/EastArctica/JS-Plugins/master/QuizizzHighlightAnswers.js"
+  "Quizizz Auto Answer": "https://raw.githack.com/EastArctica/JS-Plugins/master/Quizizz/QuizizzAutoAnswer.js",
+  "Quizizz Answer Highlighter": "https://raw.githack.com/EastArctica/JS-Plugins/master/Quizizz/QuizizzHighlightAnswers.js",
+  "Quizizz Get Answers": "https://raw.githack.com/EastArctica/JS-Plugins/master/QuizzizGetAnswers.js"
 }
