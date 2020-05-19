@@ -74,8 +74,6 @@ function Start() {
                             for (let x = 0; x < Questions[i].choices.length; x++) {
                                 if (Questions[i].choices[x].isCorrect) {
                                     let Answer = Fix(Questions[i].choices[x].body[0].html)
-                                    console.error(ToCheck)
-                                    console.error(Answer)
                                     let Choices = document.getElementsByClassName('_1y6SsObDml')[0].children
                                     for (let y = 0; y < Choices.length; y++) {
                                         if (Fix(Choices[y].children[1].children[0].children[0].innerHTML) == Answer) {

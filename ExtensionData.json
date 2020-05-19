@@ -1,5 +1,6 @@
 {
   "Quizizz Auto Answer": "https://raw.githack.com/EastArctica/JS-Plugins/master/Quizizz/QuizizzAutoAnswer.js",
   "Quizizz Answer Highlighter": "https://raw.githack.com/EastArctica/JS-Plugins/master/Quizizz/QuizizzHighlightAnswers.js",
-  "Quizizz Get Answers": "https://raw.githack.com/EastArctica/JS-Plugins/master/QuizzizGetAnswers.js"
+  "Quizizz Get Answers": "https://raw.githack.com/EastArctica/JS-Plugins/master/Quizizz/QuizzizGetAnswers.js",
+  "Edpuzzle Answer Highlighter": "https://raw.githack.com/EastArctica/JS-Plugins/master/Edpuzzle/Release.js"
 }
