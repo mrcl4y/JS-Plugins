@@ -11,7 +11,7 @@ if (window.location.href.search("quizizz.com/join/game/") == -1 && window.locati
     }
 }
 
-if (!jQuery) {
+if (typeof jQuery == 'undefined') {
     let script = document.createElement('script');
     script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
     script.type = 'text/javascript';

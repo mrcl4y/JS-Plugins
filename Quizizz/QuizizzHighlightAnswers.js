@@ -3,7 +3,7 @@ if (window.location.href.search("quizizz.com/join/game/") == -1 && window.locati
     throw new Error("You aren't on a quizizz quiz. If you think this is an error please DM East_Arctica#9238 on discord!");
 }
 
-if (!jQuery) {
+if (typeof jQuery == 'undefined') {
     let script = document.createElement('script');
     script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
     script.type = 'text/javascript';
