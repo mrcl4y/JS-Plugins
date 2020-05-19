@@ -3,10 +3,12 @@ if (window.location.href.search("quizizz.com/join/game/") == -1 && window.locati
     throw new Error("You aren't on a quizizz quiz. If you think this is an error please DM East_Arctica#9238 on discord!");
 }
 
-let script = document.createElement('script');
-script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
-script.type = 'text/javascript';
-document.getElementsByTagName('head')[0].appendChild(script);
+if (!jQuery) {
+    let script = document.createElement('script');
+    script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
+    script.type = 'text/javascript';
+    document.getElementsByTagName('head')[0].appendChild(script);
+}
 
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">
 correct-answer-x3Ca8B {

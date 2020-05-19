@@ -11,10 +11,12 @@ if (window.location.href.search("quizizz.com/join/game/") == -1 && window.locati
     }
 }
 
-let script = document.createElement('script');
-script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
-script.type = 'text/javascript';
-document.getElementsByTagName('head')[0].appendChild(script);
+if (!jQuery) {
+    let script = document.createElement('script');
+    script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
+    script.type = 'text/javascript';
+    document.getElementsByTagName('head')[0].appendChild(script);
+}
 
 let WaitTime = prompt("Please enter the number of seconds to wait before each answer.")
 if (Number(WaitTime) === NaN) {
