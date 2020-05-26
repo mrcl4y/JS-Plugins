@@ -27,6 +27,10 @@ document.head.insertAdjacentHTML('beforeend', `<style type="text/css">
     background-color: #777777;
     border: none;
 }
+.Library-Text-2xka9 {
+    color: #ffffff;
+    margin-bottom: 4px;
+}
 </style>`);
 
 const library = {}
@@ -107,7 +111,7 @@ library.CreateWindow = function (Title) {
         let Picker = document.createElement('input')
         Picker.type = 'color'
         Picker.classList.add('Library-Picker-o7cj1')
-    
+
         Main.appendChild(Picker)
         if (!Inline) {
             Main.appendChild(document.createElement('br'))
@@ -120,6 +124,25 @@ library.CreateWindow = function (Title) {
         Returns.Element = Picker
         Returns.Remove = function () {
             Picker.remove()
+        }
+        return Returns;
+    }
+
+    Window.Text = function (Text, Inline) {
+        let Returns = {}
+        let Span = document.createElement('span')
+        Span.innerText = Text
+        Span.classList.add('Library-Text-2xka9')
+
+        Main.appendChild(Span)
+        if (!Inline) {
+            Main.appendChild(document.createElement('br'))
+        }
+
+        Returns.Text = Span.innerText
+        Returns.Element = Span
+        Returns.Remove = function () {
+            Span.remove()
         }
         return Returns;
     }
@@ -137,4 +160,6 @@ let Window = library.CreateWindow("Main Window")
 let ClickMe = Window.Button("Click me!", function () {
     alert("I was clicked!")
 })
+let Text = Window.Text('Im text!')
 let Picker = Window.ColorPicker()
+
