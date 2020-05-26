@@ -1,4 +1,4 @@
-if (document.location.href.search("https://edpuzzle.com/assignments/") != 0) {
+if (document.location.href.search("edpuzzle.com/assignments/") != -1 && document.location.href.search("edpuzzle.com/media/") != -1) {
     alert("You aren't on a edpuzle assignment. If you think this is an error please DM East_Arctica#9238 on discord!")
     throw new Error("You aren't on a edpuzle assignment. If you think this is an error please DM East_Arctica#9238 on discord!")
 }
@@ -21,33 +21,47 @@ function Fix(s) {
     return s
 }
 
-let start = document.location.href.search("/assignments/") + 13
-let end = document.location.href.search("/watch")
-let QuizID = document.location.href.slice(start, end)
-let APIURL = "https://edpuzzle.com/api/v3/assignments/" + QuizID
-let xhttp = new XMLHttpRequest;
-xhttp.open("GET", APIURL, 0)
-xhttp.send()
-let QuizData = JSON.parse(xhttp.responseText)
-
+if (document.location.href.includes("edpuzzle.com/assignments/")) {
+    let start = document.location.href.search("/assignments/") + 13
+    let end = document.location.href.search("/watch")
+    let QuizID = document.location.href.slice(start, end)
+    let APIURL = "https://edpuzzle.com/api/v3/assignments/" + QuizID
+    let xhttp = new XMLHttpRequest;
+    xhttp.open("GET", APIURL, 0)
+    xhttp.send()
+    QuizData = JSON.parse(xhttp.responseText)
+} else {
+    let start = document.location.href.search("/media/") + 7
+    let end = document.location.href.length
+    let QuizID = document.location.href.slice(start, end)
+    let APIURL = "https://edpuzzle.com/api/v3/media/" + QuizID
+    let xhttp = new XMLHttpRequest;
+    xhttp.open("GET", APIURL, 0)
+    xhttp.send()
+    QuizData = JSON.parse(xhttp.responseText)
+}
 let LastQuestion
+
 function Start() {
-    setTimeout(function() {
+    setTimeout(function () {
         if (document.getElementsByClassName('_2ck9StMwG9')[0]) {
             // A question is visible
             let Question = Fix(document.getElementsByClassName('_9FPn8OzVbH _2yXznYfjSY _1ywxTGela8 _1FldHIpVii _2_UfyNB01a')[0].innerHTML)
             if (Question !== LastQuestion) {
                 LastQuestion = Question
-                let Questions = QuizData.medias[0].questions
+                if (QuizData.medias) {
+                    Questions = QuizData.medias[0].questions
+                } else {
+                    Questions = QuizData.questions
+                }
                 for (let i = 0; i < Questions.length; i++) {
                     let ToCheck = Fix(Questions[i].body[0].html)
                     if (ToCheck == LastQuestion) {
                         if (Questions[i].choices) {
+                            console.error(Questions[i])
                             for (let x = 0; x < Questions[i].choices.length; x++) {
                                 if (Questions[i].choices[x].isCorrect) {
                                     let Answer = Fix(Questions[i].choices[x].body[0].html)
-                                    console.error(ToCheck)
-                                    console.error(Answer)
                                     let Choices = document.getElementsByClassName('_1y6SsObDml')[0].children
                                     for (let y = 0; y < Choices.length; y++) {
                                         if (Fix(Choices[y].children[1].children[0].children[0].innerHTML) == Answer) {
@@ -56,11 +70,15 @@ function Start() {
                                     }
                                 }
                             }
+                        } else if (Questions[i].feedback[0]) {
+                            let span = document.createElement('span')
+                            span.innerHTML = "Feedback found: <correct-answer-x3Ca8B><u>" + Questions[i].feedback[0].html + "</u></correct-answer-x3Ca8B>"
+                            document.getElementsByClassName('_2200X8EbqK')[0].appendChild(span)
                         }
                     }
                 }
             }
-        } else if(document.getElementsByClassName('_1y6SsObDml')[0]) {
+        } else if (document.getElementsByClassName('_1y6SsObDml')[0]) {
             // A question is visible
             let Question = Fix(document.getElementsByClassName('_1y6SsObDml')[0].children[0].innerHTML)
             console.log(Question)
@@ -90,4 +108,5 @@ function Start() {
         Start()
     }, 10)
 }
+
 Start()
