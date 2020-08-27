@@ -146,10 +146,12 @@ function GetQuestion(Set) {
         v = Set.questions[v]
         switch (GetQuestionType()) {
             case "Both":
+                console.log("a")
                 let BothSRC = document.getElementsByClassName("question-media")[0].children[0].src
                 BothSRC = BothSRC.slice(0, BothSRC.search("/?w=") - 1)
                 if (v.structure.query.media[0]) {
                     if (v.structure.query.media[0].url == BothSRC) {
+                        console.log("b")
                         let BothQuestion = document.getElementsByClassName("question-text")[0].children[0].children[0].innerHTML
                         if (Fix(BothQuestion) == Fix(v.structure.query.text)) {
                             return (v)
@@ -158,6 +160,7 @@ function GetQuestion(Set) {
                 }
                 break
             case "Media":
+console.log("c")
                 let CurrentSRC = document.getElementsByClassName("question-media")[0].children[0].src
                 CurrentSRC = CurrentSRC.slice(0, CurrentSRC.search("/?w=") - 1)
                 if (v.structure.query.media[0]) {
@@ -167,12 +170,24 @@ function GetQuestion(Set) {
                 }
                 break
             case "Text":
+console.log("d")
                 let ToSearchA = document.getElementsByClassName("question-text")[0].children[0].children[0].innerHTML
-                let ToSearchB = v.structure.query.text
-                ToSearchB = ToSearchB
-                ToSearchA = ToSearchA
-                if (Fix(ToSearchA) == Fix(ToSearchB)) {
-                    return (v)
+                if (v.type == "SLIDE") {
+                    setTimeout(function() {
+                        let ToSearchB = v.structure.title.text
+                        ToSearchB = ToSearchB
+                        ToSearchA = ToSearchA
+                        if (Fix(ToSearchA) == Fix(ToSearchB)) {
+                            return (v)
+                        }
+                    }, 5000)
+                } else {
+                    let ToSearchB = v.structure.query.text
+                    ToSearchB = ToSearchB
+                    ToSearchA = ToSearchA
+                    if (Fix(ToSearchA) == Fix(ToSearchB)) {
+                        return (v)
+                    }
                 }
                 break
         }
@@ -271,7 +286,7 @@ function QuestionChangedLoop() {
                             }
                         }
                     }
-                }, 1000)
+                }, 5000)
                 CurrentQuestionNum = NewNum.innerHTML
             }
         } else if (RedemptionQues) {
