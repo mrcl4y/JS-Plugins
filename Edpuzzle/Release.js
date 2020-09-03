@@ -26,19 +26,36 @@ if (document.location.href.includes("edpuzzle.com/assignments/")) {
     let end = document.location.href.search("/watch")
     let QuizID = document.location.href.slice(start, end)
     let APIURL = "https://edpuzzle.com/api/v3/assignments/" + QuizID
+	/*
+	This doesn't work for some reason...
     let xhttp = new XMLHttpRequest;
     xhttp.open("GET", APIURL, 0)
     xhttp.send()
     QuizData = JSON.parse(xhttp.responseText)
+	This does though??????
+	*/
+	$.get(APIURL).success((response) => {
+		console.log(response)
+		QuizData = response
+	})
+
 } else {
     let start = document.location.href.search("/media/") + 7
     let end = document.location.href.length
     let QuizID = document.location.href.slice(start, end)
     let APIURL = "https://edpuzzle.com/api/v3/media/" + QuizID
+	/*
+	This doesn't work for some reason...
     let xhttp = new XMLHttpRequest;
     xhttp.open("GET", APIURL, 0)
     xhttp.send()
     QuizData = JSON.parse(xhttp.responseText)
+	This does though??????
+	*/
+	$.get(APIURL).success((response) => {
+		console.log(response)
+		QuizData = response
+	})
 }
 let LastQuestion
 
