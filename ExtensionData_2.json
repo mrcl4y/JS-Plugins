@@ -1,18 +1,18 @@
 {
   "Quizizz": {
     "Highlighter": {
-      "script": "https://raw.githack.com/EastArctica/JS-Plugins/master/Quizizz/QuizizzHighlightAnswers.js"
+      "script": "https://raw.githubusercontent.com/EastArctica/JS-Plugins/master/Quizizz/QuizizzHighlightAnswers.js"
     },
     "Auto Answer": {
-      "script": "https://raw.githack.com/EastArctica/JS-Plugins/master/Quizizz/QuizizzAutoAnswer.js"
+      "script": "https://raw.githubusercontent.com/EastArctica/JS-Plugins/master/Quizizz/QuizizzAutoAnswer.js"
     },
     "Get Answers": {
-      "script": "https://raw.githack.com/EastArctica/JS-Plugins/master/Quizizz/QuizzizGetAnswers.js"
+      "script": "https://raw.githubusercontent.com/EastArctica/JS-Plugins/master/Quizizz/QuizzizGetAnswers.js"
     }
   },
   "Edpuzzle": {
     "Highlighter": {
-      "script": "https://raw.githack.com/EastArctica/JS-Plugins/master/Edpuzzle/Release.js"
+      "script": "https://raw.githubusercontent.com/EastArctica/JS-Plugins/master/Edpuzzle/Release.js"
     }
   }
   
