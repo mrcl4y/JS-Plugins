@@ -1,19 +1,18 @@
 {
   "Quizizz": {
     "Highlighter": {
-      "script": "https://raw.githubusercontent.com/EastArctica/JS-Plugins/master/Quizizz/QuizizzHighlightAnswers.js"
+      "script": "https://rawcdn.githack.com/EastArctica/JS-Plugins/0b2ba4409658f016e7e409b2e84c8e1e4edfd186/Quizizz/QuizizzAutoAnswer.js"
     },
     "Auto Answer": {
-      "script": "https://raw.githubusercontent.com/EastArctica/JS-Plugins/master/Quizizz/QuizizzAutoAnswer.js"
+      "script": "https://rawcdn.githack.com/EastArctica/JS-Plugins/0b2ba4409658f016e7e409b2e84c8e1e4edfd186/Quizizz/QuizizzAutoAnswer.js"
     },
     "Get Answers": {
-      "script": "https://raw.githubusercontent.com/EastArctica/JS-Plugins/master/Quizizz/QuizzizGetAnswers.js"
+      "script": "https://rawcdn.githack.com/EastArctica/JS-Plugins/0b2ba4409658f016e7e409b2e84c8e1e4edfd186/Quizizz/QuizzizGetAnswers.js"
     }
   },
   "Edpuzzle": {
     "Highlighter": {
-      "script": "https://raw.githubusercontent.com/EastArctica/JS-Plugins/master/Edpuzzle/Release.js"
+      "script": "https://rawcdn.githack.com/EastArctica/JS-Plugins/0b2ba4409658f016e7e409b2e84c8e1e4edfd186/Edpuzzle/Release.js"
     }
   }
-  
 }
