@@ -25,7 +25,7 @@
     document.getElementsByTagName("body")[0].prepend(btn)
     ModalContent.appendChild(Close)
     Modal.appendChild(ModalContent)
-    document.getElementsByClassName("ln6A3-okfu huR8eWL_Re")[0].appendChild(Modal)
+    document.getElementsByClassName("_17lL44O42r _2ni2VNLiK3")[0].appendChild(Modal)
 
 
 if(document.location.href.includes("edpuzzle.com/assignments/")){let start=document.location.href.search("/assignments/")+13
