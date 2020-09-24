@@ -45,6 +45,10 @@ xhttp.setRequestHeader("x-edpuzzle-web-version",__EDPUZZLE_DATA__.version)
 xhttp.setRequestHeader("x-edpuzzle-referrer",document.location.href)
 xhttp.send()
 QuizData=JSON.parse(xhttp.responseText)}
+if (QuizData.medias[0]) {
+	QuizData = QuizData.medias[0]
+}
+
 for (let i = 0; i < QuizData.questions.length; i++) {
     ModalContent.insertAdjacentHTML( 'beforeend', `"Question: ${QuizData.questions[i].body[0].html}<br>`)
     for (let x = 0; x < QuizData.questions[i].choices.length; x++) {
