@@ -18,7 +18,7 @@
       "script": "https://rawcdn.githack.com/EastArctica/JS-Plugins/0b2ba4409658f016e7e409b2e84c8e1e4edfd186/Edpuzzle/Release.js"
     },
   "Get Answers": {
-      "script": "https://rawcdn.githack.com/EastArctica/JS-Plugins/6d6438cbb91806c6dfe6d195c4992b1d353dd465/Edpuzzle/EdpuzzleGetAnswers.js"
+      "script": "https://rawcdn.githack.com/EastArctica/JS-Plugins/5204caf1deb69fcaf96607db9c50099d71cc571d/Edpuzzle/EdpuzzleGetAnswers.js"
     }
   }
 }
