@@ -132,20 +132,31 @@ if (found) {
 						r = s.structure.kind,
 						n = s.structure.answer,
 						c = Encoding.decode(n);
-						ModalContent.insertAdjacentHTML( 'beforeend', `<b>Question: </b>`)
-						ModalContent.insertAdjacentHTML( 'beforeend', `${s.structure.query.text}<br>`)
-						if (c[0] == "[") {
-							newc = c.slice(1, c.length-1)
-							newc = newc.split(",");
-							// c has been turned into an array :)
-							ModalContent.insertAdjacentHTML( 'beforeend', `<b>Answers:</b><br>`)
-							for (let i = 0; i < newc.length; i++) {
-								ModalContent.insertAdjacentHTML( 'beforeend', `${s.structure.options[Number(newc[i])].text || s.structure.options[Number(newc[i])].media[0].url} <br>`)
+						console.log(s.structure.kind)
+						if (r !== "SLIDE" && r !== "MEDIA_SUBTITLE" && r !== "TITLE_PARA" && r !== "TITLE_PARA_MEDIA" && r !== "TITLE_BULLETS") {
+							ModalContent.insertAdjacentHTML( 'beforeend', `<b>Question: </b>`)
+							ModalContent.insertAdjacentHTML( 'beforeend', `${s.structure.query.text}<br>`)
+							if (c[0] == "[") {
+								newc = c.slice(1, c.length-1)
+								newc = newc.split(",");
+								// c has been turned into an array :)
+								ModalContent.insertAdjacentHTML( 'beforeend', `<b>Answers:</b><br>`)
+								for (let i = 0; i < newc.length; i++) {
+									if (r !== "OPEN" && s.structure.options[Number(newc[i])]) {
+										ModalContent.insertAdjacentHTML( 'beforeend', `${s.structure.options[Number(newc[i])].text || s.structure.options[Number(newc[i])].media[0].url} <br>`)
+									} else {
+										if (s.structure.explain.text !== null) {
+											ModalContent.insertAdjacentHTML( 'beforeend', `${"Explaination: " + s.structure.explain.text} <br>`)
+										} else {
+											ModalContent.insertAdjacentHTML( 'beforeend', "<u>This question doesn't have an answer.</u><br>")
+										}
+									}
+								}
+								ModalContent.insertAdjacentHTML( 'beforeend', `<br>`)
+							} else {
+								//console.log(s.structure)
+							    ModalContent.insertAdjacentHTML( 'beforeend', `<b>Answer:</b> ${s.structure.options[c].text || s.structure.options[c].media[0].url} <br><br>`)
 							}
-							ModalContent.insertAdjacentHTML( 'beforeend', `<br>`)
-						} else {
-							//console.log(s.structure)
-						    ModalContent.insertAdjacentHTML( 'beforeend', `<b>Answer:</b> ${s.structure.options[c].text || s.structure.options[c].media[0].url} <br><br>`)
 						}
 				}
 			});
