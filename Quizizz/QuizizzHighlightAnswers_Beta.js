@@ -206,7 +206,7 @@ function QuestionChangedLoop() {
                     let Set = GetSetData()
                     let Question = GetQuestion(Set)
                     if (Question == "Error: No question found") {
-                        alert("Failed to find question! This is a weird issue I don't understand, you will just have to answer this question legit for now.")
+                        alert("EAScripts: Failed to find question! This is a weird issue I don't understand, you will just have to answer this question legit for now.")
                     } else {
                         let Answer = GetAnswer(Question)
                         if (Array.isArray(Answer)) {
@@ -234,7 +234,7 @@ function QuestionChangedLoop() {
                             let Set = GetSetData()
                             let Question = GetQuestion(Set)
                             if (Question === "Error: No question found") {
-                                alert("Failed to find question! This is a weird issue I don't understand, you will just have to answer this question legit for now.")
+                                alert("EAScripts: Failed to find question! This is a weird issue I don't understand, you will just have to answer this question legit for now.")
                             } else {
                                 let Answer = GetAnswer(Question)
                                 if (Array.isArray(Answer)) {
