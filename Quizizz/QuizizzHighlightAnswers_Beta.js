@@ -206,7 +206,12 @@ function QuestionChangedLoop() {
                     let Set = GetSetData()
                     let Question = GetQuestion(Set)
                     if (Question == "Error: No question found") {
-                        alert("EAScripts: Failed to find question! This is a weird issue I don't understand, you will just have to answer this question legit for now.")
+                                var iframe = document.createElement("iframe")
+                                document.body.appendChild(iframe)
+                                iframe.contentDocument.open()
+                                iframe.contentDocument.write(`<script>alert("EAScripts: Failed to find question! This is a weird issue I don't understand, you will just have to answer this question legit for now.")</script>`)
+                                iframe.contentDocument.close()
+                                iframe.remove()
                     } else {
                         let Answer = GetAnswer(Question)
                         if (Array.isArray(Answer)) {
@@ -234,7 +239,12 @@ function QuestionChangedLoop() {
                             let Set = GetSetData()
                             let Question = GetQuestion(Set)
                             if (Question === "Error: No question found") {
-                                alert("EAScripts: Failed to find question! This is a weird issue I don't understand, you will just have to answer this question legit for now.")
+                                var iframe = document.createElement("iframe")
+                                document.body.appendChild(iframe)
+                                iframe.contentDocument.open()
+                                iframe.contentDocument.write(`<script>alert("EAScripts: Failed to find question! This is a weird issue I don't understand, you will just have to answer this question legit for now.")</script>`)
+                                iframe.contentDocument.close()
+                                iframe.remove()
                             } else {
                                 let Answer = GetAnswer(Question)
                                 if (Array.isArray(Answer)) {
