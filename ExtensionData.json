@@ -1,7 +1,14 @@
 {
   "Quizizz": {
     "⚠ Alert": {
-      "script": "https://rawcdn.githack.com/EastArctica/JS-Plugins/eb2029c5be4108aeb44f81c36126cc9a2397d837/Quizizz/unavailable.js" 
+      "script": "https://rawcdn.githack.com/EastArctica/JS-Plugins/eb2029c5be4108aeb44f81c36126cc9a2397d837/Quizizz/unavailable.js"
     }
+  },
+    "FIXED": {
+    "Go": {},
+    "Use": {},
+    "EAScripts": {},
+    "You": {},
+    "Fucker": {}
   }
 }
