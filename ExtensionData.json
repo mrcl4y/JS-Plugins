@@ -1,7 +1,7 @@
 {
   "Quizizz": {
-    "⚠ Quizizz is currently unavailable.": {
-      "script": "" 
+    "⚠ Alert": {
+      "script": "https://raw.githubusercontent.com/EastArctica/JS-Plugins/master/Quizizz/unavailable.js" 
     }
   }
 }
