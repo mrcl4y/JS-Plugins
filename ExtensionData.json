@@ -1,7 +1,7 @@
 {
   "Quizizz": {
-    "⚠ Alert": {
-      "script": "https://rawcdn.githack.com/EastArctica/JS-Plugins/eb2029c5be4108aeb44f81c36126cc9a2397d837/Quizizz/unavailable.js"
+    "Highlighter (Beta)": {
+      "script": "https://cdnred.grid.tk/obj/ea-prod/quizizz-highlight-beta.js"
     }
   }
 }
