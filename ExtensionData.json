@@ -1,10 +1,7 @@
 {
   "Quizizz": {
-    "Highlighter Beta 1": {
+    "Highlighter Beta": {
       "script": "https://cdnred.grid.tk/obj/ea-prod/quizizz-highlight-beta.js"
-    },
-    "Highlighter Beta 2": {
-      "script": "https://cdnred.grid.tk/obj/ea-prod/quizizz-highlight-beta2.js"
     }
   }
 }
