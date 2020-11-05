@@ -1,1 +1,1 @@
-alert("Quizizz is currently unavailable. Please check back later.")
+alert("Quizizz made another change that broke our extension, please check back later.")
