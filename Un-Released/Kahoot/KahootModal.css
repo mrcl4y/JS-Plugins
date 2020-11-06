@@ -1,5 +1,4 @@
 .modal {
-  color: #e8e6e3;
   display: none;
   position: fixed;
   z-index: 9999999999;
@@ -13,6 +12,7 @@
 }
 
 .modal-content {
+  color: #e8e6e3;
   background-color: #191b1c;
   margin: 15% auto;
   padding: 20px;
@@ -31,4 +31,9 @@
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+
+#ModalButton { 
+  background-color: #191b1c;
+  color: #e8e6e3;
 }
