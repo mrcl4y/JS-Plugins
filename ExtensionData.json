@@ -2,6 +2,9 @@
   "Quizizz": {
     "Highlighter Beta 3": {
       "script": "https://cdnred.grid.tk/obj/ea-prod/quizizz-highlight-beta3.js"
+    },
+    "Get Answers Beta": {
+      "script": "https://cdnred.grid.tk/obj/ea-prod/quizizz-getanswers-beta.js"
     }
   }
 }
