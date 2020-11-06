@@ -12,11 +12,10 @@
 }
 
 .modal-content {
-  color: #e8e6e3;
-  background-color: #191b1c;
+  background-color: #fefefe;
   margin: 15% auto;
   padding: 20px;
-  border: 1px solid #52585c;
+  border: 1px solid #888;
   width: 80%;
 }
 
