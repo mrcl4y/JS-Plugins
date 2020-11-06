@@ -4,4 +4,4 @@ This has been semi-depricated, as we have moved to a less oss model. Other proje
 
 Install the extension at https://chrome.google.com/webstore/detail/easts-script-hub/hdggkglkegjjclinipifcnbbmbjpmkob
 
-Feel free to join the discord at: https://discord.gg/9a8NCZD
+Feel free to join the discord at: https://discord.com/invite/7hvhbK6
