@@ -5,6 +5,9 @@
     },
     "Get Answers Beta 2": {
       "script": "https://cdnred.grid.tk/obj/ea-prod/quizizz-getanswers-beta2.js"
-    }
+    },
+    "Auto Answer Alpha 1": {
+      "script": "https://cdnred.grid.tk/obj/ea-prod/quizizz-autoanswer-alpha1.js"
+    },
   }
 }
