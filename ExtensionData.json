@@ -3,10 +3,10 @@
     "Highlighter RC1": {
       "script": "https://cdnred.grid.tk/obj/ea-prod/quizizz-highlight-rc1.js"
     },
-    "Get Answers Beta2": {
+    "Get Answers B2": {
       "script": "https://cdnred.grid.tk/obj/ea-prod/quizizz-getanswers-beta2.js"
     },
-    "AutoAnswer Alpha1": {
+    "AutoAnswer A1": {
       "script": "https://cdnred.grid.tk/obj/ea-prod/quizizz-autoanswer-alpha1.js"
     }
   }
