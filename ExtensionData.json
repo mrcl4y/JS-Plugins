@@ -1,7 +1,7 @@
 {
   "Quizizz": {
     "Highlighter RC1": {
-      "script": "https://cdnred.grid.tk/obj/ea-prod/quizizz-highlight-rc1.js"
+      "script": "testing"
     },
     "Get Answers B2": {
       "script": "https://cdnred.grid.tk/obj/ea-prod/quizizz-getanswers-beta2.js"
